@@ -68,11 +68,15 @@ void save_to_file(const std::vector<Student> &students, const char *filename)
 	// takes all students and writes a row of all it's data
 	for (Student student : students)
 	{	
-		fprintf(outfile, "%s\t%d\t%d\t%d\t%d\t%lf\t%c\n",
+		if(fprintf(outfile, "%s\t%d\t%d\t%d\t%d\t%lf\t%c\n",
 				student.student_id,student.getQuiz1(),
 				student.getQuiz2(),student.getMidterm(),
 				student.getFinal_t(),student.getAverage(),
-				student.getLetter_grade());
+				student.getLetter_grade()) < 0)
+		{
+			fprintf(stderr, "ERROR CANNOT WRITE TO FILE");
+			exit(EXIT_FAILURE);
+		}
 	}
 	
 	// ALWAYS CLOSE FILE WHEN DONE
