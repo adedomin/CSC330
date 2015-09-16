@@ -79,6 +79,21 @@ void save_to_file(const std::vector<Student> &students, const char *filename)
 	fclose(outfile);
 }
 
+void expected_output()
+{
+	printf("StuID\tQuiz1\tQuiz2\tMidterm\tFinal\tAverage\tFinal Grade\n");
+	printf("0001\t8\t9\t100\t90\t91.250000\tA\n");
+	printf("0002\t7\t9\t70\t90\t82.500000\tB\n");
+	printf("0003\t7\t8\t75\t80\t77.500000\tC\n");
+	printf("0004\t9\t9\t90\t85\t87.500000\tB\n");
+	printf("0005\t6\t7\t70\t75\t71.250000\tC\n");
+	printf("0006\t5\t5\t60\t60\t57.500000\tF\n");
+	printf("0007\t8\t7\t100\t90\t88.750000\tB\n");
+	printf("0008\t7\t7\t50\t60\t60.000000\tD\n");
+	printf("0009\t9\t9\t85\t92\t89.750000\tB\n");
+	printf("0010\t7\t6\t60\t70\t66.250000\tD\n");
+}
+
 int main(int argc, char **argv)
 {
 	// who needs static arrays?
@@ -129,7 +144,8 @@ int main(int argc, char **argv)
 	// save file data to file
 	save_to_file(students, "students.txt");
 	// EXPECTED OUTPUT
-	// expected_output();
+	expected_output();
 	return 0;
 }
+
 
