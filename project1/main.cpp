@@ -1,46 +1,33 @@
-#include "ADTbag.h"
+#include "ADTbag.hpp"
 #include<string>
 #include<iostream>
 using namespace std;
 
-void displayBag(ArrayBag<string>& bag)
-{
-	cout << "The bag contains "<< bag.getCurrentSize() << " items:\n";
-	vector<string> bagItems=bag.toVector();
-	int numberOfEntries=(int)bagItems.size();
-	for (int i=0; i<numberOfEntries; i++)
-	{
-		cout <<bagItems[i] << " ";
-	}
-	cout << endl;
-}
-
-
-void main()
+int main()
 {
 	ArrayBag<string> bag;
 	cout << "Testing the array-based bag:" <<endl;
 	if (bag.isEmpty())
 		cout << "The initial bag is empty.\n";
-	displayBag(bag);
+	bag.printBag();
 
 	string items[]={"one", "two", "three", "four", "five", "one", "two"};
 	cout << "Add 7 items to the bag:" <<endl;
 	for (int i=0; i<7; i++)
 	{
-		bag.add(items[i]);
+		bag.addItem(items[i]);
 	}
-	displayBag(bag);
+	bag.printBag();
 	cout << "The string \"one\" occurs " << bag.getFrequencyOf("one") << " times.\n";
 	cout << "The string \"two\" occurs " << bag.getFrequencyOf("two") << " times.\n";
 	cout << "The string \"three\" occurs " << bag.getFrequencyOf("three") << " time.\n";
 	cout << "The string \"seven\" occurs " << bag.getFrequencyOf("seven") << " time.\n";
 	cout<< "Remove string \"one\" ...\n";
-	bag.remove("one");
-	displayBag(bag);
+	bag.removeItem("one");
+	bag.printBag();
 	cout<< "Remove string \"two\" ...\n";
-	bag.remove("two");
-	displayBag(bag);
+	bag.removeItem("two");
+	bag.printBag();
 	if (bag.contains("three"))
 		cout << "The bag contains the string \"three\".\n";
 	else 
@@ -51,10 +38,8 @@ void main()
 	else 
 		cout << "The bag does NOT contain the string \"seven\".\n";
 
-	cout << "Delete all items fron the bag. \n";
+	cout << "Delete all items from the bag. \n";
 	bag.clear();
 
-	displayBag(bag);
-
-
+	bag.printBag();
 }
