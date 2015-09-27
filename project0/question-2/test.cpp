@@ -113,10 +113,10 @@ int main(int argc, char **argv)
 
 	int i = 0;
 	// read while values are still being pulled out
-	while(readval != NULL)
+	while (readval != NULL)
 	{
 		// See enum at top
-		switch(i)
+		switch (i)
 		{
 			case STUDENT_ID:
 				students.push_back(readval);
