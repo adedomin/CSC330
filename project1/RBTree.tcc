@@ -1,5 +1,6 @@
-#include "RBTree.h"
+#define DEBUG 1
 #include <stddef.h>
+#include <iostream>
 
 template<class Key, class Value>
 RBTree<Key,Value>::RBTree()
@@ -28,6 +29,18 @@ template<class Key, class Value>
 void RBTree<Key,Value>::printInOrder()
 {
 	traverse(root,&printNodeData);
+}
+
+template<class Key, class Value>
+void RBTree<Key,Value>::printNodeData(
+		Node *node)
+{
+	std::cout << "Key:   " << node->key
+			  << '\n'
+			  << "Value: " << node->value
+			  << '\n'
+			  << "Color: " << node->color
+			  << '\n';
 }
 
 template<class Key, class Value>
@@ -61,85 +74,68 @@ void RBTree<Key,Value>::deleteAllNodes(
 
 template<class Key, class Value>
 void RBTree<Key,Value>::leftRotate(
-		Node *x)
+		Node *root)
 {
-	Node *y;
-	// y is right child
-	y = x->right;
-	if (y != NULL)
+	Node *pivot = root->right;
+	if (pivot != NULL)
 	{
-		// set x's right child
-		// to y's left child
-		x->right = y->left;
-		// if it exists
-		if (y->left == NULL)
+		root->right = pivot->left;
+		if (root->right != NULL)
 		{
-			// let child know
-			// its new parent
-			y->left->parent = x;
+			root->right->parent = root;
 		}
-		// if root, y new root
-		if (x->parent == NULL)
+		pivot->left = root;
+
+		if (root->parent == NULL)
 		{
-			root = y;	
+			root->parent = pivot;
+			pivot->parent = NULL;
 		}
-		// if x was left of its parent
-		else if ((x->parent->left) == x)
+		else if (root->parent->left == root)
 		{
-			// make parent's left
-			// point to y
-			x->parent->left = y;	
+			pivot->parent = root->parent;
+			pivot->parent->left = pivot;
+			root->parent = pivot;
 		}
 		else
 		{
-			x->parent->right = y;
+			pivot->parent = root->parent;
+			pivot->parent->right = pivot;
+			root->parent = pivot;
 		}
-		// y->left is now x
-		y->left = x;
-		// x's parent is now y
-		x->parent = y;
 	}
 }
-
 template<class Key, class Value>
 void RBTree<Key,Value>::rightRotate(
-		Node *x)
+		Node *root)
 {
-	Node *y;
-	// y is left child
-	y = x->left;
-	if (y != NULL)
+	Node *pivot = root->left;
+	if (pivot != NULL)
 	{
-		// set x's left child
-		// to y's right child
-		x->left = y->right;
-		// if it exists
-		if (y->right == NULL)
+		root->left = pivot->right;
+		if (root->left != NULL)
 		{
-			// let child know
-			// its new parent
-			y->right->parent = x;
+			root->left->parent = root;
 		}
-		// if root, y new root
-		if (x->parent == NULL)
+		pivot->right = root;
+
+		if (root->parent == NULL)
 		{
-			root = y;	
+			root->parent = pivot;
+			pivot->parent = NULL;
 		}
-		// if x was left of its parent
-		else if ((x->parent->left) == x)
+		else if (root->parent->left == root)
 		{
-			// make parent's left
-			// point to y
-			x->parent->left = y;	
+			pivot->parent = root->parent;
+			pivot->parent->left = pivot;
+			root->parent = pivot;
 		}
 		else
 		{
-			x->parent->right = y;
+			pivot->parent = root->parent;
+			pivot->parent->right = pivot;
+			root->parent = pivot;
 		}
-		// y's right child is now x
-		y->right = x;
-		// x's parent is now y
-		x->parent = y;
 	}
 }
 
@@ -147,6 +143,9 @@ template<class Key, class Value>
 void RBTree<Key,Value>::insertCaseOne(
 		Node *node)
 {
+#if DEBUG > 0
+	std::cout << "in case one\n";
+#endif
 	// node is nonexistent
 	// ???
 	// nothing to do
@@ -168,15 +167,10 @@ void RBTree<Key,Value>::insertCaseOne(
 template<class Key, class Value>
 void RBTree<Key,Value>::insertCaseTwo(
 		Node *node)
-{	
-	// node is nonexistent
-	// ???
-	// nothing to do
-	if (node == NULL)
-	{
-		return;
-	}
-
+{
+#if DEBUG > 0
+	std::cout << "in case two\n";
+#endif
 	if (node->parent->color == BLACK)
 	{
 		return;
@@ -188,22 +182,16 @@ void RBTree<Key,Value>::insertCaseTwo(
 template<class Key, class Value>
 void RBTree<Key,Value>::insertCaseThree(
 		Node *node)
-{	
-	// node is nonexistent
-	// ???
-	// nothing to do
-	if (node == NULL)
-	{
-		return;
-	}
-
-	Node *grandparent;
+{
+#if DEBUG > 0
+	std::cout << "in case three\n";
+#endif	
+	Node *grandparent = GRANDPARENT(node);
 	Node *uncle = UNCLE(node);
 
 	if ((uncle != NULL) &&
 		(uncle->color == RED))
 	{
-		grandparent = GRANDPARENT(node);
 		uncle->color = BLACK;
 		node->parent->color = BLACK;
 		grandparent->color = RED;
@@ -217,47 +205,50 @@ template<class Key, class Value>
 void RBTree<Key,Value>::insertCaseFour(
 		Node *node)
 {	
-	// node is nonexistent
-	// ???
-	// nothing to do
-	if (node == NULL)
-	{
-		return;
-	}
-	
+#if DEBUG > 0
+	std::cout << "in case four\n";
+#endif	
 	Node *grandparent = GRANDPARENT(node);
 
 	if ((node->parent->left == node) &&
 		(node->parent == grandparent->right))
 	{
-		rightRotate(node->parent);
-		node = node->right;
+#if DEBUG > 0
+	printNodeData(node);
+#endif
+		node = node->parent;
+		rightRotate(node);
 	}
 	else if ((node->parent->right == NULL) &&
 			 (node->parent == grandparent->left))
 	{
-		leftRotate(node->parent);
-		node = node->left;
+#if DEBUG > 0
+	printNodeData(node);
+#endif
+		node = node->parent;
+		leftRotate(node);
 	}
-
+#if DEBUG > 0
+	std::cout << "in case five\n";
+	printNodeData(node);
+	printNodeData(node->parent);
+#endif	
 	return insertCaseFive(node);
 }
 
 template<class Key, class Value>
 void RBTree<Key,Value>::insertCaseFive(
 		Node *node)
-{	
-	// node is nonexistent
-	// ???
-	// nothing to do
-	if (node == NULL)
-	{
-		return;
-	}
-	
+{
+#if DEBUG > 0
+	std::cout << "in case five\n";
+	printNodeData(node);
+	printNodeData(node->parent);
+	printNodeData(node->parent->parent);
+#endif	
 	Node *grandparent = GRANDPARENT(node);
 	node->parent->color = BLACK;
-	grandparent->color = RED;
+	node->parent->parent->color = RED;
 	if (node->parent->left == node)
 	{
 		leftRotate(grandparent);
@@ -278,31 +269,36 @@ void RBTree<Key,Value>::standardInsert(
 		return;
 	}
 
-	if (parent == NULL)
+	if (root == NULL)
 	{
-		parent = root;
+		root = node;
 	}
 
-	if (parent->key > node->key)
+	if (parent != NULL)
 	{
-		if (parent->left == NULL)
+		if (parent->key > node->key)
 		{
-			parent->left = node;
+			if (parent->left == NULL)
+			{
+				parent->left = node;
+				node->parent = parent;
+			}
+			else
+			{
+				standardInsert(node,parent->left);
+			}
 		}
 		else
 		{
-			standardInsert(node,parent->left);
-		}
-	}
-	else
-	{
-		if (parent->right == NULL)
-		{
-			parent->right = node;
-		}
-		else
-		{
-			standardInsert(node,parent->right);
+			if (parent->right == NULL)
+			{
+				parent->right = node;
+				node->parent = parent;
+			}
+			else
+			{
+				standardInsert(node,parent->right);
+			}
 		}
 	}
 
@@ -310,9 +306,12 @@ void RBTree<Key,Value>::standardInsert(
 }
 
 template<class Key, class Value>
-RBTree<Key,Value>::Node* RBTree<Key,Value>::search(
+typename RBTree<Key,Value>::Node* RBTree<Key,Value>::search(
 		Key key, Node* node)
 {
+	#if DEBUG > 0
+		std::cout << "SEARCHING...\n";
+	#endif
 	if (node == NULL)
 	{
 		return NULL;
@@ -324,11 +323,11 @@ RBTree<Key,Value>::Node* RBTree<Key,Value>::search(
 	}
 	else if (node->key > key)
 	{
-		search(key,node->left);
+		return search(key,node->left);
 	}
 	else
 	{
-		search(key,node->right);
+		return search(key,node->right);
 	}
 }
 
@@ -343,7 +342,7 @@ void RBTree<Key,Value>::insert(
 	node->value = value;
 	node->color = RED;
 	
-	return standardInsert(node);
+	return standardInsert(node,root);
 }
 
 template<class Key, class Value>
@@ -364,7 +363,12 @@ bool RBTree<Key,Value>::changeValue(
 template<class Key, class Value>
 Value RBTree<Key,Value>::getValue(Key key)
 {
-	return search(key, root)->value;
+	Node* result = search(key, root);
+	if (result != NULL)
+	{
+		return result->value;
+	}
+	return NULL;
 }
 
 template<class Key, class Value>
@@ -378,4 +382,3 @@ int RBTree<Key,Value>::getSize()
 {
 	return count;
 }
-

@@ -1,7 +1,6 @@
-#ifndef CSC330_RBTREE
-#define CSC330_RBTREE
+#ifndef CSC330_REDBLACK_TREE
+#define CSC330_REDBLACK_TREE
 #include <stddef.h>
-#include <iostream>
 
 #define RED 'R'
 #define BLACK 'B'
@@ -52,9 +51,9 @@ class RBTree
 	// root of tree
 	Node *root;
 
-	void printNodeData(Node*);
+	static void printNodeData(Node*);
 
-	// rotate around subtree
+	// rotate subtree
 	void leftRotate(Node*);
 	void rightRotate(Node*);
 
@@ -71,7 +70,7 @@ class RBTree
 	void insertCaseOne(Node*);
 	// CASE 2:
 	// if new node's parent is black
-	// then we're good
+	// then tree is ok
 	// exit
 	void insertCaseTwo(Node*);
 	// CASE 3:
@@ -136,5 +135,6 @@ class RBTree
 	int getSize();
 };
 
+#include "RBTree.tcc"
 #endif
 
