@@ -1,6 +1,7 @@
 #define DEBUG 0
 #include <stddef.h>
 #include <iostream>
+#include <vector>
 
 template<class Key, class Value>
 BSTree<Key,Value>::BSTree()
@@ -13,7 +14,7 @@ template<class Key, class Value>
 BSTree<Key,Value>::BSTree(Key key, Value value)
 {
 	this->count = 1;
-	this->root = new BSTree::Node();
+	this->root = new Node<Key,Value>();
 	this->root->key = key;
 	this->root->value = value;
 }
@@ -37,16 +38,16 @@ void BSTree<Key,Value>::printInOrder()
 
 template<class Key, class Value>
 void BSTree<Key,Value>::printNodeData(
-		Node *node)
+		Node<Key,Value> *node)
 {
-	std::cout << "Key: "<< node->key << '\n' 
+	std::cout << "Key: "<< node->key << '\n'
 		      << "Value: "<<node->value << '\n';
 }
 
 template<class Key, class Value>
 void BSTree<Key,Value>::traverse(
-		Node *node,
-		void (*f)(Node*))
+		Node<Key,Value> *node,
+		void (*f)(Node<Key,Value>*))
 {
 	if (node == NULL)
 	{
@@ -60,7 +61,7 @@ void BSTree<Key,Value>::traverse(
 
 template<class Key, class Value>
 void BSTree<Key,Value>::deleteAllNodes(
-		Node *node)
+		Node<Key,Value> *node)
 {
 	if (node == NULL)
 	{
@@ -74,7 +75,8 @@ void BSTree<Key,Value>::deleteAllNodes(
 
 template<class Key, class Value>
 void BSTree<Key,Value>::standardInsert(
-		Node *node, Node *parent)
+		Node<Key,Value> *node, 
+		Node<Key,Value> *parent)
 {
 	// node is nonexistent
 	if (node == NULL)
@@ -121,8 +123,8 @@ void BSTree<Key,Value>::standardInsert(
 }
 
 template<class Key, class Value>
-typename BSTree<Key,Value>::Node* BSTree<Key,Value>::search(
-		Key key, Node* node)
+Node<Key,Value>* BSTree<Key,Value>::search(
+		Key key, Node<Key,Value>* node)
 {
 #if DEBUG > 0
 	std::cout << "SEARCHING...\n";
@@ -151,7 +153,7 @@ template<class Key, class Value>
 void BSTree<Key,Value>::insertKey(
 		Key key, Value value)
 {
-	Node *node = new Node();
+	Node<Key,Value> *node = new Node<Key,Value>();
 	++count;
 
 	node->key = key;
@@ -164,7 +166,7 @@ template<class Key, class Value>
 void BSTree<Key,Value>::deleteKey(
 		Key key)
 {
-	Node *found = search(key,root);
+	Node<Key,Value> *found = search(key,root);
 
 	if (found == NULL)
 	{
@@ -238,7 +240,7 @@ template<class Key, class Value>
 bool BSTree<Key,Value>::changeValue(
 		Key key,Value value)
 {
-	Node *found = search(key, root);
+	Node<Key,Value> *found = search(key, root);
 	
 	if (found == NULL)
 	{
@@ -252,7 +254,7 @@ bool BSTree<Key,Value>::changeValue(
 template<class Key, class Value>
 Value BSTree<Key,Value>::getValue(Key key)
 {
-	Node* result = search(key, root);
+	Node<Key,Value>* result = search(key, root);
 	if (result != NULL)
 	{
 		return result->value;
@@ -270,4 +272,28 @@ template<class Key, class Value>
 int BSTree<Key,Value>::getSize()
 {
 	return count;
+}
+
+template<class Key, class Value>
+void BSTree<Key,Value>::traverseToVector(
+		Node<Key,Value> root,
+		std::vector<Node<Key,Value>> &array)
+{
+	if (root == NULL)
+	{
+		return;
+	}
+
+	traverseToVector(root->left, array);
+	array.push_back(Node<Key,Value>());
+	array.back().key = root->key;
+	array.back().value = root->value;
+	traverseToVector(root->right, array);
+}
+
+template<class Key, class Value>
+std::vector<Node<Key,Value>> BSTree<Key,Value>::toVector()
+{
+	std::vector<Node<Key,Value>> array;
+	traverseToVector(root,array);
 }

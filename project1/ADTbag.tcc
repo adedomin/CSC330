@@ -68,7 +68,7 @@ int ArrayBag<T>::getFrequencyOf(const T &item)
 template<class T>
 bool ArrayBag<T>::contains(const T &item)
 {
-	return bag->exists(item);
+	return bag->getValue(item) != 0;
 }
 
 template<class T>
@@ -82,4 +82,19 @@ template<class T>
 void ArrayBag<T>::printBag()
 {
 	bag->printInOrder();
+}
+
+template<class T>
+std::vector<T> ArrayBag<T>::toVector()
+{
+	std::vector<Node<T,int>> array = bag->toVector();
+	std::vector<T> retArray;
+	
+	typename std::vector<Node<T,int>>::iterator i = array.begin();
+	for (;i != array.end(); ++i)
+	{
+		retArray.push_back(*i);
+	}
+
+	return retArray;
 }

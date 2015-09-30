@@ -1,7 +1,7 @@
 #ifndef _ARRAY_BAG
 #define _ARRAY_BAG
 #include "BSTree.hpp"
-//#include <vector>
+#include <vector>
 
 //const int MAX_LIST=20;  // Maximum capacity of the bag
 // bag capacity? ha
@@ -43,6 +43,7 @@ class ArrayBag
 
 	// print bag in order
 	void printBag();
+	std::vector<T> toVector();
 };
 
 #include "ADTbag.tcc"
