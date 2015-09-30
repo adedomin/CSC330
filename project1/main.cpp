@@ -1,6 +1,7 @@
 #include "ADTbag.hpp"
 #include<string>
 #include<iostream>
+#include<vector>
 using namespace std;
 
 int main()
@@ -38,6 +39,16 @@ int main()
 	else 
 		cout << "The bag does NOT contain the string \"seven\".\n";
 
+	cout << "add two to the bag twice\n";
+	bag.addItem("two");
+	bag.addItem("two");
+	cout << "get vector of bag contents and print them\n";
+	std::vector<std::string> vectorOfBag = bag.toVector();
+	typename std::vector<std::string>::iterator i = vectorOfBag.begin();
+	for (;i != vectorOfBag.end(); ++i)
+	{
+		std::cout << *i << "\n";
+	}
 	cout << "Delete all items from the bag. \n";
 	bag.clear();
 

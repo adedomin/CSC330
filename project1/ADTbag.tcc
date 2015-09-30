@@ -93,7 +93,10 @@ std::vector<T> ArrayBag<T>::toVector()
 	typename std::vector<Node<T,int>>::iterator i = array.begin();
 	for (;i != array.end(); ++i)
 	{
-		retArray.push_back(*i);
+		for (int i2=0; i2<i->value; ++i2)
+		{
+			retArray.push_back(i->key);
+		}
 	}
 
 	return retArray;

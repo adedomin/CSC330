@@ -276,7 +276,7 @@ int BSTree<Key,Value>::getSize()
 
 template<class Key, class Value>
 void BSTree<Key,Value>::traverseToVector(
-		Node<Key,Value> root,
+		Node<Key,Value> *root,
 		std::vector<Node<Key,Value>> &array)
 {
 	if (root == NULL)
@@ -296,4 +296,5 @@ std::vector<Node<Key,Value>> BSTree<Key,Value>::toVector()
 {
 	std::vector<Node<Key,Value>> array;
 	traverseToVector(root,array);
+	return array;
 }

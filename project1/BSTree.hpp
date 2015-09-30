@@ -40,7 +40,7 @@ class BSTree
 	// go through tree in order
 	// and execute some callback
 	void traverse(Node<Key,Value>*,void(*f)(Node<Key,Value>*));
-	void traverseToVector(Node<Key,Value>,std::vector<Node<Key,Value>>&);
+	void traverseToVector(Node<Key,Value>*,std::vector<Node<Key,Value>>&);
 	// go through tree to delete all
 	// nodes
 	void deleteAllNodes(Node<Key,Value>*);
