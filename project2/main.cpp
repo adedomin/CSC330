@@ -1,4 +1,4 @@
-#include "LinkedBag.h"
+#include "LinkedBag.hpp"
 #include<string>
 #include<iostream>
 using namespace std;
@@ -17,7 +17,7 @@ void displayBag(LinkedBag<string>& bag)
 }
 
 
-void main()
+int main(void)
 {
 	LinkedBag<string> firstBag;
 	cout << "Testing the link-based bag:" <<endl;

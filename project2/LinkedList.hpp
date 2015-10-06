@@ -20,7 +20,7 @@ class LinkedList {
 	// HEAD or from current position
 	// negative indices are not effected
 	// as they always start from back
-	traverse_to(int,bool);
+	Node<T>* traverse_to(int,bool);
 
 	public:
 
@@ -29,13 +29,15 @@ class LinkedList {
 
 	~LinkedList();
 
-	void pushFront(Node<T>*);
-	void pushBack(Node<T>*);
+	bool pushFront(Node<T>*);
+	bool pushBack(Node<T>*);
 
 	// returns value of deleted
-	T popFront();
-	T popBack();
-	T deleteAt(int index);
+	bool popFront();
+	bool popBack();
+	bool deleteAt(int index);
+
+	void deleteAll();
 
 	int getSize();
 	bool isEmpty();
@@ -51,6 +53,8 @@ class LinkedList {
 	bool hasNext();
 	// if currPtr has last
 	bool hasLast();
+	// if curr ptr is not null
+	bool isNull();
     
 	// moves up the currPtr unless next is null
 	void operator++();
@@ -83,23 +87,13 @@ LinkedList<T>::LinkedList() {
 }
 
 template<class T>
-LinkedList<T>::LinkedList(Node<T>* initial) {
-
-	this->head = initial;
-	this->curr = initial;
-	this->tail = initial;
-	if (initial != NULL) {
-
-		this->size = 1;
-	}
-	else {
-
-		this->size = 0;
-	}
+LinkedList<T>::~LinkedList() {
+	
+	this->deleteAll();
 }
 
 template<class T>
-Node<T>* LinkedList<T>::traverses_to(int index, 
+Node<T>* LinkedList<T>::traverse_to(int index, 
 		bool fromCurr) {
 
 	Node<T>* temp;
@@ -144,105 +138,107 @@ Node<T>* LinkedList<T>::traverses_to(int index,
 }
 
 template<class T>
-void LinkedList<T>::pushFront(Node<T>* newHead) {
+bool LinkedList<T>::pushFront(Node<T>* newHead) {
 
 	if (newHead == NULL) {
 
-		return;
+		return false;
 	}
 
 	if (isEmpty())
 	{
 		this->head = newHead;
 		this->tail = newHead;
-		this->++size;
-		return;
+		this->size += 1;
+		return true;
 	}
 
 	newHead->setNext(this->head);
 	newHead->setLast(NULL);
 	this->head->setLast(newHead);
 	this->head = newHead;
-	this->++size;
+	this->size += 1;
+	return true;
 }
 
 template<class T>
-void LinkedList<T>::pushBack(Node<T>* newTail) {
+bool LinkedList<T>::pushBack(Node<T>* newTail) {
 
 	if (newTail == NULL) {
 
-		return;
+		return false;
 	}
 
 	if (isEmpty())
 	{
 		this->head = newTail;
 		this->tail = newTail;
-		this->++size;
-		return;
+		this->size += 1;
+		return true;
 	}
 
 	newTail->setLast(this->tail);
 	newTail->setNext(NULL);
 	this->tail->setNext(newTail);
 	this->tail = newTail;
-	this->++size;
+	this->size += 1;
+	return true;
 }
 
 template<class T>
-T LinkedList<T>::popFront() {
+bool LinkedList<T>::popFront() {
 
 	if (isEmpty())
 	{
-		return T();
+		return false;
 	}
 
-	T retval = this->head->getItem();
 	if (this->size == 1)
 	{	
 		delete this->head;
 		this->head = NULL;
 		this->tail = NULL;
-		--size;
-		return retval;
+		this->size -= 1;
+		return true;
 	}
 
 	Node<T>* nextHead = this->head->getNext();
 	delete this->head;
 	this->head = nextHead;
 	this->head->setLast(NULL);
-	--size;
-	return retval;
+	this->size -= 1;
+
+	return true;
 }
 
 template<class T>
-T LinkedList<T>::popBack() {
+bool LinkedList<T>::popBack() {
 
 	if (isEmpty())
 	{
-		return T();
+		return false;
 	}
 
-	T retval = this->tail->getItem();
 	if (this->size == 1)
 	{	
 		delete this->tail;
 		this->head = NULL;
 		this->tail = NULL;
-		--size;
-		return retval;
+		this->size -= 1;
+		return true;
 	}
 
 	Node<T>* nextTail = this->tail->getLast();
 	delete this->tail;
 	this->tail = nextTail;
 	this->tail->setNext(NULL);
-	--size;
-	return retval;
+	this->size -= 1;
+
+	return true;
 }
 
 template<class T>
-T LinkedList<T>::deleteAt(int index) {
+bool LinkedList<T>::deleteAt(int index) {
 
 	Node<T>* temp = traverse_to(index, false);
 
@@ -251,7 +247,8 @@ T LinkedList<T>::deleteAt(int index) {
 		return popFront();
 	}
 
-	if (temp == this->last) {
+	if (temp == this->tail) {
+
 		return popBack();
 	}
 	
@@ -260,11 +257,32 @@ T LinkedList<T>::deleteAt(int index) {
 
 		temp->getNext()->setLast(temp->getLast());
 		temp->getLast()->setNext(temp->getNext());
+		--size;
 	}
 
-	T retval = temp->getItem();
 	delete temp;
-	return retval;
+	return true;
+}
+
+template<class T>
+void LinkedList<T>::deleteAll() {
+
+	if (this->isEmpty()) {
+		return;
+	}
+
+	this->toBegin();
+	while (this->hasNext()) {
+		
+		curr = curr->getNext();
+		delete curr->getLast();
+	}
+
+	delete curr;
+	this->head = NULL;
+	this->tail = NULL;
+	this->curr = NULL;
+	this->size = 0;
 }
 
 template<class T>
@@ -293,6 +311,12 @@ bool LinkedList<T>::hasLast() {
 };
 
 template<class T>
+bool LinkedList<T>::isNull() {
+
+	return this->curr == NULL;
+}
+
+template<class T>
 void LinkedList<T>::operator++() {
 
 	this->shiftRight();
@@ -301,10 +325,10 @@ void LinkedList<T>::operator++() {
 template<class T>
 void LinkedList<T>::shiftRight() {
 
-	if (this->hasNext()) {
-
-		this->curr = this->curr->getNext();
+	if (this->curr == NULL){
+		return;
 	}
+	this->curr = this->curr->getNext();
 };
 
 template<class T>
@@ -316,10 +340,10 @@ void LinkedList<T>::operator--() {
 template<class T>
 void LinkedList<T>::shiftLeft() {
 
-	if (this->hasLast()) {
-
-		this->curr = this->curr->getLast();
+	if (this->curr == NULL){
+		return;
 	}
+	this->curr = this->curr->getLast();
 };
 
 template<class T>

@@ -27,12 +27,12 @@ class Node
 };
 
 template<class ItemType>
-Node<ItemType>::Node():next(NULL)
+Node<ItemType>::Node():next(NULL), last(NULL)
 {
 }
 
 template<class ItemType>
-Node<ItemType>::Node(const ItemType& anItem):item(anItem), next(NULL)
+Node<ItemType>::Node(const ItemType& anItem):item(anItem), next(NULL), last(NULL)
 {
 }
 
