@@ -1,17 +1,16 @@
 CC=c++
-CFLAGS=-Wall --std=c++11
-NAME=complex
-DEPS=complex.h
-OBJ=complex.o test.o
+CFLAGS=-Wall --std=c++98 -O
+NAME=LinkedBag
+DEPS=LinkedBag.hpp LinkedList.hpp Node.hpp
+OBJ=main.o
 
-all: $(OBJ) executable
+all: $(OBJ) executable clean
 	
 %.o: %.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 executable:
 	$(CC) -o $(NAME) $(OBJ) $(CFLAGS) 
-	make clean
 
 clean:
 	rm $(OBJ)
