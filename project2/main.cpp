@@ -1,4 +1,4 @@
-#include "LinkedBag.hpp"
+#include "LinkedBag.h"
 #include<string>
 #include<iostream>
 using namespace std;
@@ -59,9 +59,6 @@ int main(void)
 
 	cout << "Delete all items from the second bag. \n";
 	secondBag.clear();
-
-
 	displayBag(secondBag);
-
-
 }
+

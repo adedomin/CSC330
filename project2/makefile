@@ -1,7 +1,7 @@
 CC=c++
 CFLAGS=-Wall --std=c++98 -O
 NAME=LinkedBag
-DEPS=LinkedBag.hpp LinkedList.hpp Node.hpp
+DEPS=LinkedBag.h Node.h
 OBJ=main.o
 
 all: $(OBJ) executable clean
