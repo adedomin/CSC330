@@ -3,7 +3,6 @@
 #include<iostream>
 using namespace std;
 
-
 void displayBag(LinkedBag<string>& bag)
 {
 	cout << "The bag contains "<< bag.getCurrentSize() << " items:\n";
@@ -15,7 +14,6 @@ void displayBag(LinkedBag<string>& bag)
 	}
 	cout << endl;
 }
-
 
 int main(void)
 {

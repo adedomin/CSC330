@@ -5,8 +5,8 @@
 using namespace std;
 
 template<class ItemType>
-class Node
-{
+class Node {
+
 public:
 	Node();
 	Node(const ItemType& anItem);
@@ -64,3 +64,4 @@ Node<ItemType>* Node<ItemType>::getNext() const
 }
 
 #endif
+

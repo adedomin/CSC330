@@ -1,60 +1,62 @@
 #ifndef _LINKED_BAG
 #define _LINKED_BAG
-#include"Node.h"
+#include "Node.h"
 #include <vector>
-using namespace std;
+//using namespace std;
 
 
 template <class ItemType>
-class LinkedBag
-{    
+class LinkedBag {    
 
-	Node<ItemType> *headPtr;  // the pointer pointing to the first linked node of the bag
-	Node<ItemType> *tailPtr;  // the pointer pointing to the last linked node of the bag
+	Node<ItemType> *headPtr;
+	// the pointer pointing to the first linked node of the bag
+	Node<ItemType> *tailPtr;
+	// the pointer pointing to the last linked node of the bag
 	int size; // current count of bag items
 
 	void deleteAllNodes(Node<ItemType>*) const;
+	// delete all nodes and free their memory
 
 	Node<ItemType>* getPointerTo(const ItemType&,Node<ItemType>*) const; 
 	// Return either a pointer to the node containing the given entry
-    // or the NULL if the entry is not in the bag.
-	
+    // or NULL if the entry is not in the bag.
+
 	Node<ItemType>* getParentTo(const ItemType&,Node<ItemType>*) const;
 	// return's parent of node who has a child with item requested
 	// NULL otherwise
 	// if it returns the tail, that means head is the child
-	
+
 	int countOf(const ItemType&,Node<ItemType>*) const;
+	// count of times item is in the list
 
 	void traverseToVector(std::vector<ItemType>&,Node<ItemType>*) const;
 
 public:
 	LinkedBag();  //default constructor. Create an empty list.
-    
+   
 	LinkedBag(const LinkedBag<ItemType>& aBag);  // Copy constructor. 
-    
+   
 	virtual ~LinkedBag(); // Destructor should be virtual
 
 	bool isEmpty() const;  // Test if the bag is empty
-	
+
 	int getCurrentSize() const; // Get the number of items in the bag
-	
+
 	bool add(const ItemType& newEntry);
 	//Insert the newEntry into a bag that is not full. Place it right after the last item in the array.
-	
+
 	bool remove(const ItemType& anEntry);
 	//Remove an item from the bag that matches the newEntry
-	
+
 	int getFrequencyOf (const ItemType& anEntry) const;
 	// To count the number of times a given object occurs in a bag.
-    
+
 	bool contains(const ItemType& anEntry) const;
 	// To test if the item "anEntry" is in the bag.
-    
+
 	void clear(); // Remove all items from the bag.
-    
-    
-	vector <ItemType> toVector() const;
+
+	std::vector <ItemType> toVector() const;
 	// Get the entries that are in a bag and return them within a vector.
 };
 
@@ -81,7 +83,8 @@ Node<ItemType>* LinkedBag<ItemType>::getParentTo(
 		Node<ItemType>* node) const {
 
 	if (node == NULL || 
-		(node->getNext() == NULL && node != this->headPtr)) {
+		(node->getNext() == NULL && 
+		 node != this->headPtr)) {
 
 		return NULL;
 	}
@@ -194,15 +197,15 @@ template<class ItemType>
 bool LinkedBag<ItemType>::add(const ItemType& item) {
 
 	Node<ItemType>* newNode = new Node<ItemType>(item);
-	
+
+	// Out of mem?
 	if (newNode == NULL) {
 
-		// OOM?
 		return false;
 	}
 
 	if (this->isEmpty()) {
-		
+
 		this->headPtr = newNode;
 		this->tailPtr = newNode;
 		++size;
@@ -218,7 +221,8 @@ bool LinkedBag<ItemType>::add(const ItemType& item) {
 template<class ItemType>
 bool LinkedBag<ItemType>::remove(const ItemType& item) {
 
-	Node<ItemType>* parent = this->getParentTo(item, headPtr);
+	Node<ItemType>* parent = 
+		this->getParentTo(item,headPtr);
 
 	// not found
 	if (parent == NULL) {
@@ -226,9 +230,12 @@ bool LinkedBag<ItemType>::remove(const ItemType& item) {
 		return false;
 	}
 
+	// assume tailPtr is headPtr's parent
 	if (parent == tailPtr) {
 		
-		Node<ItemType>* child = this->headPtr->getNext();
+		Node<ItemType>* child = 
+			this->headPtr->getNext();
+
 		delete this->headPtr;
 		this->headPtr = child;	
 		--size;
@@ -278,7 +285,6 @@ std::vector<ItemType> LinkedBag<ItemType>::toVector() const {
 
 	std::vector<ItemType> items;
 	traverseToVector(items,headPtr);
-
 	return items; 
 };
 
