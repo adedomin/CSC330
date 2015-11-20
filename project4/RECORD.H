@@ -1,7 +1,7 @@
 #ifndef REC_H
 #define REC_H
 
-#include "Key.h" 
+#include "KEY.H" 
 class Record {
    Key key;
 public:

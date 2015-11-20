@@ -27,9 +27,8 @@ public:
 	void clear(); // Remove all items from the list.
 
 protected:
-	T items[MAX_SIZE];
+	T items[MAX_LIST];
 	int size; // number of items in the list
-	int count;
 };
 
 template <class T>

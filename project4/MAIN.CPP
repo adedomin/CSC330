@@ -39,7 +39,7 @@ void intro()
    help ();
 }
 
-void main()
+int main()
 {
    List<Record> s; List<Record> t = s;  //  help out a poor old compiler
    intro();

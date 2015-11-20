@@ -1,12 +1,12 @@
 CC=c++
-CFLAGS=-Wall --std=c++98 -O
+CFLAGS=-Wall --std=c++11 -O
 NAME=SortList
 DEPS=KEY.H LIST.H RANDOM.H RECORD.H SORTLIST.H TIMER.H
-OBJ=KEY.o MAIN.o RANDOM.o RECORD.o SORTLIST.o TIMER.o
+OBJ=KEY.o RANDOM.o RECORD.o TIMER.o MAIN.o
 
 all: $(OBJ) executable clean
 	
-%.o: %.cpp $(DEPS)
+%.o: %.CPP $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 executable:
