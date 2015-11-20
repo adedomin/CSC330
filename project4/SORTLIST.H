@@ -24,7 +24,6 @@ public:
 private:
 	// add private member functions if needed
 	void swap(int,int);
-	void heap_swap(T*,int,int);
 	// array indicies to sawp.
 	void copy_array(T*);
 	void copy_array(T*,int,int);
@@ -61,14 +60,6 @@ void Sortable_list<T>::swap(int ele1, int ele2) {
 	T temp = this->items[ele1];
 	this->items[ele1] = this->items[ele2];
 	this->items[ele2] = temp;
-}
-
-template <class T>
-void Sortable_list<T>::heap_swap(T* heap, int ele1, int ele2) {
-
-	T temp = heap[ele1];
-	heap[ele1] = heap[ele2];
-	heap[ele2] = temp;
 }
 
 template <class T>
@@ -132,6 +123,7 @@ void Sortable_list<T>::selection_sort() {
 
 // ----- BEGIN QUICK SORT ----- //
 
+// 
 template <class T>
 int Sortable_list<T>::partition(int lo, int hi) {
 	T pivot = this->items[hi-1];
@@ -146,6 +138,9 @@ int Sortable_list<T>::partition(int lo, int hi) {
 	return i;
 }
 
+// partitions and splits by
+// partition value is NOT included
+// in future splits
 template <class T>
 void Sortable_list<T>::quick_sort2(int lo, int hi) {
 	if (lo >= hi) {
@@ -166,6 +161,9 @@ void Sortable_list<T>::quick_sort() {
 
 // ----- BEGIN MERGE SORT ----- //
 
+// merges the two parts
+// left is [lo, mid)
+// right is [mid, hi)
 template <class T>
 void Sortable_list<T>::merge(
 		T* copy,
@@ -191,6 +189,8 @@ void Sortable_list<T>::merge(
 	}
 }
 
+// splits array into parts
+// then merges them
 template <class T>
 void Sortable_list<T>::merge_sort2(
 		T* copy,
@@ -207,6 +207,8 @@ void Sortable_list<T>::merge_sort2(
 	copy_array(copy,lo,hi);
 }
 
+// creates a copy array
+// then calls the recursive sort algo
 template <class T>
 void Sortable_list<T>::merge_sort() {
 
@@ -218,6 +220,10 @@ void Sortable_list<T>::merge_sort() {
 
 // ----- BEGIN HEAP SORT ----- //
 
+// from an arbitrary root
+// check if left or right child
+// is greater than root
+// swap if greater
 template <class T>
 void Sortable_list<T>::swim_down(int root) {
 
@@ -244,6 +250,8 @@ void Sortable_list<T>::swim_down(int root) {
 	return swim_down(swap_pos);
 }
 
+// moves the highest values in order
+// to the rear of the array
 template <class T>
 void Sortable_list<T>::heap_pop(){
 	swap(0,this->size-1);
@@ -251,6 +259,7 @@ void Sortable_list<T>::heap_pop(){
 	swim_down(0);
 }
 
+// takes first parent and goes through every other parent
 template <class T>
 void Sortable_list<T>::heapify(int parent) {
 	
@@ -262,6 +271,10 @@ void Sortable_list<T>::heapify(int parent) {
 	heapify(parent-1);
 }
 
+// pretty dirty, I know.
+// in place heapify's the tree using swim down
+// then "pops" them till the root is the minimum
+// then dirtily sets size to it's previous value
 template <class T>
 void Sortable_list<T>::heap_sort() {
 	heapify(PARENT(this->size-1));
@@ -275,6 +288,7 @@ void Sortable_list<T>::heap_sort() {
 
 // ------ END HEAP SORT ------ //
 
+// WHICH SEQUENCE?!
 template <class T>
 void Sortable_list<T>::shell_sort() {
 	return;
