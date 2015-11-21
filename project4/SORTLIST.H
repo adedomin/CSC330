@@ -8,6 +8,7 @@
 #include "LIST.H"
 #include "KEY.H"
 #include "RECORD.H"
+#include "RANDOM.H"
 
 template <class T>
 class Sortable_list: public List<T> {
@@ -23,11 +24,16 @@ public:
 
 private:
 	// add private member functions if needed
+	
 	void swap(int,int);
 	// array indicies to sawp.
-	void copy_array(T*);
 	void copy_array(T*,int,int);
 	// copy array for merge sort
+	//void shuffle();
+	// to gaurd against
+	// intentionally given
+	// data sets that will
+	// slow quick sort
 
 	// --- qsort --- //
 	int partition(int,int);
@@ -37,13 +43,21 @@ private:
 
 	// --- merge --- //
 	void merge_sort2(T*,int,int);
+	// split into sub arrays
 	void merge(T*,int,int,int);
+	// merge and sort sub arrays
 	// --- merge --- //
 	
 	// --- hsort --- //
 	void swim_down(int);
+	// swim parents down
+	// to create heap property
 	void heapify(int);
+	// create heap property
+	// for the array
 	void heap_pop();
+	// move largest elements
+	// to back of array in order
 	// --- hsort --- //
 };
 
@@ -63,19 +77,17 @@ void Sortable_list<T>::swap(int ele1, int ele2) {
 }
 
 template <class T>
-void Sortable_list<T>::copy_array(T* copyArr) {
-	for (int i=0; i< this->size; ++i) {
-		this->items[i] = copyArr[i];
-	}
-}
-
-template <class T>
 void Sortable_list<T>::copy_array(
 		T* copyArr, int begin, int end) {
 	for (int i=begin; i<end; ++i) {
 		this->items[i] = copyArr[i];
 	}
 }
+
+//template <class T>
+//void Sortable_list::shuffle() {
+//	
+//}
 
 // ------ END ARRAY HELP FUNCTIONS ------ //
 
@@ -121,9 +133,31 @@ void Sortable_list<T>::selection_sort() {
 	}
 }
 
+// Basically the same as insertion
+template <class T>
+void Sortable_list<T>::shell_sort() {
+
+	// Gaps from Robert Sedgewick's paper
+	// Analysis of Shellsort and Related Algorithms
+	int gaps[] = 
+		{ 1391376, 463792, 198768, 
+		  86961, 33936, 13776, 4592, 
+		  1968, 861, 336, 112, 48, 21, 
+		  7, 3, 1 };
+	for (int i=0; i<16; ++i) {
+		for (int j=gaps[i]; j<this->size; ++j) {
+			for (int itr=j;itr > gaps[i] && this->items[j-gaps[i]] > this->items[j]; --j) {
+				swap(j-gaps[i], j);
+			}
+		}
+	}
+}
+
 // ----- BEGIN QUICK SORT ----- //
 
-// 
+// pick a pivot
+// make it such that 
+// left <= pivot < right
 template <class T>
 int Sortable_list<T>::partition(int lo, int hi) {
 	T pivot = this->items[hi-1];
@@ -139,7 +173,7 @@ int Sortable_list<T>::partition(int lo, int hi) {
 }
 
 // partitions and splits by
-// partition value is NOT included
+// partition value/s is/are NOT included
 // in future splits
 template <class T>
 void Sortable_list<T>::quick_sort2(int lo, int hi) {
@@ -212,8 +246,9 @@ void Sortable_list<T>::merge_sort2(
 template <class T>
 void Sortable_list<T>::merge_sort() {
 
-	T copy[this->size];
+	T* copy = new T[this->size];
 	merge_sort2(copy, 0, this->size);
+	delete[] copy;
 }
 
 // ------ END MERGE SORT ------ //
@@ -287,12 +322,6 @@ void Sortable_list<T>::heap_sort() {
 }
 
 // ------ END HEAP SORT ------ //
-
-// WHICH SEQUENCE?!
-template <class T>
-void Sortable_list<T>::shell_sort() {
-	return;
-}
 
 #endif
 
