@@ -8,11 +8,13 @@
 #include "LIST.H"
 #include "KEY.H"
 #include "RECORD.H"
-#include "RANDOM.H"
+//#include "RANDOM.H"
 
 template <class T>
 class Sortable_list: public List<T> {
+
 public:
+
 	Sortable_list();
 	void insertion_sort(); // done: implement insertion sort
 	void selection_sort(); // done: implement selection sort
@@ -23,13 +25,15 @@ public:
 	void merge_sort(); // todo; implement merge sort
 
 private:
-	// add private member functions if needed
 	
+	Random random;
+	// for Shuffle
+
 	void swap(int,int);
 	// array indicies to sawp.
 	void copy_array(T*,int,int);
 	// copy array for merge sort
-	//void shuffle();
+	void shuffle();
 	// to gaurd against
 	// intentionally given
 	// data sets that will
@@ -63,6 +67,7 @@ private:
 
 template <class T>
 Sortable_list<T>::Sortable_list() {
+
 	this->size = 0;
 }
 
@@ -79,20 +84,27 @@ void Sortable_list<T>::swap(int ele1, int ele2) {
 template <class T>
 void Sortable_list<T>::copy_array(
 		T* copyArr, int begin, int end) {
+
 	for (int i=begin; i<end; ++i) {
 		this->items[i] = copyArr[i];
 	}
 }
 
-//template <class T>
-//void Sortable_list::shuffle() {
-//	
-//}
+template <class T>
+void Sortable_list<T>::shuffle() {
+
+	for (int i=0; i < this->size-1; ++i) {
+		// random_integer's upper bound is inclusive (i,j)
+		int shuffle_by = random.random_integer(i,this->size-1);
+		swap(shuffle_by, i);
+	}
+}
 
 // ------ END ARRAY HELP FUNCTIONS ------ //
 
 template <class T>
 void Sortable_list<T>::bubble_sort() {
+
 	bool swapped = true;
 	while (swapped) {
 		swapped = false;
@@ -101,16 +113,6 @@ void Sortable_list<T>::bubble_sort() {
 				swap(i, i-1);
 				swapped = true;
 			}
-		}
-	}
-}
-
-template <class T>
-void Sortable_list<T>::insertion_sort() {
-
-	for (int i=1; i<this->size; ++i) {
-		for (int j=i;j > 0 && this->items[j-1] > this->items[j]; --j) {
-			swap(j-1, j);
 		}
 	}
 }
@@ -133,7 +135,16 @@ void Sortable_list<T>::selection_sort() {
 	}
 }
 
-// Basically the same as insertion
+template <class T>
+void Sortable_list<T>::insertion_sort() {
+
+	for (int i=1; i<this->size; ++i) {
+		for (int j=i;j > 0 && this->items[j-1] > this->items[j]; --j) {
+			swap(j-1, j);
+		}
+	}
+}
+
 template <class T>
 void Sortable_list<T>::shell_sort() {
 
@@ -160,6 +171,7 @@ void Sortable_list<T>::shell_sort() {
 // left <= pivot < right
 template <class T>
 int Sortable_list<T>::partition(int lo, int hi) {
+
 	T pivot = this->items[hi-1];
 	int i = lo;
 	for (int j=lo; j < hi-1; ++j) {
@@ -177,6 +189,7 @@ int Sortable_list<T>::partition(int lo, int hi) {
 // in future splits
 template <class T>
 void Sortable_list<T>::quick_sort2(int lo, int hi) {
+
 	if (lo >= hi) {
 		return;
 	}
@@ -188,6 +201,8 @@ void Sortable_list<T>::quick_sort2(int lo, int hi) {
 
 template <class T>
 void Sortable_list<T>::quick_sort() {
+
+	shuffle();
 	quick_sort2(0, this->size);
 }
 
